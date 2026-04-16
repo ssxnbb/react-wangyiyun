@@ -1,0 +1,11 @@
+/dist/*
+.local
+.output.js
+/node_modules/**
+
+**/*.svg
+**/*.sh
+
+/public/*
+craco.config.js
+src/react-app-env.d.ts
