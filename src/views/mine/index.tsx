@@ -4,7 +4,7 @@ interface IProps {
   children?: ReactNode
 }
 //<IProps>默认将函数参数props设置为Iprops
-const Download: FC<IProps> = () => {
-  return <div>Download</div>
+const Mine: FC<IProps> = () => {
+  return <div>Mine</div>
 }
-export default memo(Download)
+export default memo(Mine)
