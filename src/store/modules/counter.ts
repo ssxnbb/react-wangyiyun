@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice,PayloadAction } from '@reduxjs/toolkit'
 import { count } from 'console'
 const counterSlice = createSlice({
   name: 'counter',
@@ -8,7 +8,8 @@ const counterSlice = createSlice({
     address: '成都'
   },
   reducers: {
-    changeMessage(state, { payload }) {
+    //可以设置payload的类型，其中泛型设定的是payload的类型。
+    changeMessage(state, { payload }:PayloadAction<string>) {
       state.message = payload
     }
   }

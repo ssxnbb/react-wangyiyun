@@ -11,7 +11,15 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended'
   ],
-  overrides: [],
+  overrides: [
+    {
+      files: ['*.d.ts', '**/*.d.ts'],
+      rules: {
+        '@typescript-eslint/no-empty-interface': 'off',
+        '@typescript-eslint/no-empty-object-type': 'off'
+      }
+    }
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',

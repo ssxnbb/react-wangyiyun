@@ -17,6 +17,15 @@ function App() {
   //先获取getState函数的类型，再去获取返回值类型即为state类型,现在把他放到store当中直接导出
   // type state_type = typeof store.getState
   // type IRootState = ReturnType<state_type>
+  const dispatch = useAppDispatch()
+  function changeM() {
+    dispatch(changeMessage('hahaha'))
+  }
+  const { count, address, message } = useAppSelector((state) => ({
+    count: state.counter.count,
+    address: state.counter.address,
+    message: state.counter.message
+  }))
   return (
     <div className="App">
       <AppHeader />
@@ -24,6 +33,10 @@ function App() {
       <Suspense fallback="....loading">
         <div className="rou"> {useRoutes(routers)}</div>
       </Suspense>
+      <h1>数量为：{count}</h1>
+      <h1>地址为：{address}</h1>
+      <h1>信息为：{message}</h1>
+      <button onClick={changeM}>改变消息</button>
       <AppFooter />
     </div>
   )

@@ -6,8 +6,10 @@ import App from '@/App'
 import 'normalize.css'
 import store from './store'
 import { Provider } from 'react-redux'
+//使用ThemeProvider提供通用的主题
+import { ThemeProvider } from 'styled-components'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-
+import theme from './assets/them'
 root.render(
   <Provider store={store}>
     <HashRouter>

@@ -9,6 +9,8 @@ const store = configureStore({
     counter: counterReducer
   }
 })
+//const state = store.getState()
+//type StateType = typeof state，这两个方法也可以给useAppSelector设置类型
 // 1. 获取 store 实例的 getState 方法的类型
 type GetStateFnType = typeof store.getState
 
