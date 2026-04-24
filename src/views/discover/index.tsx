@@ -3,6 +3,7 @@
 import React, { memo, Suspense } from 'react'
 import type { ReactNode, FC } from 'react'
 import { Outlet, Link } from 'react-router-dom'
+import NavBar from './c-cpns/nav-bar'
 interface IProps {
   children?: ReactNode
 }
@@ -10,14 +11,7 @@ interface IProps {
 const Discorver: FC<IProps> = () => {
   return (
     <div>
-      <div>
-        <Link to="/discorver/recommend">推荐</Link>
-        <Link to="/discorver/ranking">排行榜</Link>
-        <Link to="/discorver/songs">歌单</Link>
-        <Link to="/discorver/djradio">主播电台</Link>
-        <Link to="/discorver/artist">歌手</Link>
-        <Link to="/discorver/album">新碟上架</Link>
-      </div>
+      <NavBar/>
       {/* 为了避免二级路由内容加载的时候导致整体loading
       所以需要在二级路由当中设置suspense */}
       <Suspense fallback="loading">

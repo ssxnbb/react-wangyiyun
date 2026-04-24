@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from './store'
 import { changeMessage } from './store/modules/counter'
 import AppHeader from './component/app-header'
 import AppFooter from './component/app-footer'
+import { Button, Flex } from 'antd'
 function App() {
   //返回对象的时候必须在最外层再加上一个大括号（）。
   //state不能是any类型，不然不方便提示词的出现
@@ -37,6 +38,9 @@ function App() {
       <h1>地址为：{address}</h1>
       <h1>信息为：{message}</h1>
       <button onClick={changeM}>改变消息</button>
+      <Flex gap="small" wrap>
+        <Button type="dashed">Dashed Button</Button>
+      </Flex>
       <AppFooter />
     </div>
   )

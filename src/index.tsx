@@ -12,8 +12,11 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 import theme from './assets/them'
 root.render(
   <Provider store={store}>
-    <HashRouter>
-      <App />
-    </HashRouter>
+    {/* theme主题当中存在这通用变量的存储 */}
+    <ThemeProvider theme={theme}>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </ThemeProvider>
   </Provider>
 )

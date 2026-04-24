@@ -27,6 +27,7 @@ class HYRequest {
     this.instance.interceptors.response.use(
       (res) => {
         console.log('全局响应成功的拦截')
+        //返回响应数据的时候，直接返回res.data，之后去接收数据的时候，就不用再去点data
         return res.data
       },
       (err) => {
