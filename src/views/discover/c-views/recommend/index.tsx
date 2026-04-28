@@ -1,8 +1,7 @@
 import React, { memo, useEffect, useState } from 'react'
 import type { ReactNode, FC } from 'react'
-import { useAppDispatch } from '@/store'
-import hyRequest from '@/service'
-import { fetchBannerData } from './store/recommend'
+import TopBanner from './c-cpns/top-banner'
+
 interface IProps {
   children?: ReactNode
 }
@@ -17,10 +16,9 @@ export interface BannerData {
 }
 //<IProps>默认将函数参数props设置为Iprops
 const Recommend: FC<IProps> = () => {
-  const dispatch = useAppDispatch()
-  useEffect(() => {
-    dispatch(fetchBannerData())
-  }, [])
-  return <div>recommend</div>
+
+  return (
+      <TopBanner/>
+  )
 }
 export default memo(Recommend)
