@@ -6,3 +6,12 @@ export function getBanner() {
     url: '/banner'
   })
 }
+//limit传递参数最后会跟url拼接在一起，limit默认为30
+export function getHotRecommend(limit = 30) {
+  return hyRequest.get({
+    url: '/personalized',
+    params: {
+      limit
+    }
+  })
+}

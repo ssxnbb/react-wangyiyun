@@ -27,7 +27,7 @@ const TopBanner: FC<IProps> = () => {
   //最终返回一个对象，然后对对象进行解构。拿到数据
   const { banners } = useAppSelector(
     (state) => ({
-      banners: state.banner.banners
+      banners: state.recommend.banners
     }),
     shallowEqual //做出一个浅比较，地址变值不变，不进行刷新。
   )

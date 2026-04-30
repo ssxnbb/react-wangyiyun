@@ -64,9 +64,11 @@ class HYRequest {
         .request<any, T>(config)
         .then((res) => {
           //设置promise就是为了对响应成功进行处理，响应成功后就去执行响应成功拦截器。因为响应成功拦截器只能在响应成功的时候才能执行。
+          //响应成功会真正返回从服务器当中请求到的res当中的data
           if (config.interceptors?.responseSuccessFn) {
             res = config.interceptors.responseSuccessFn(res)
           }
+          //最终await拿到的就是resolve当中的res
           resolve(res as any as T)
         })
         .catch((err) => {
