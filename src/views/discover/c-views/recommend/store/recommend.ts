@@ -1,32 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getBanner, getHotRecommend } from '../service/recommend'
+import { getBanner, getHotRecommend, getNewAlbum } from '../service/recommend'
 import { log } from 'console'
 import { stat } from 'fs'
-interface BannerData {
-  targetId: number
-  bigImageUrl: string
-  imageUrl: string
-  targetType: number
-  typeTitle: string
-  s_ctrp: string
-  url: string
-}
-interface HotrecommedData {
-  id: number
-  type: number
-  name: string
-  copywriter: string
-  picUrl: string
-  canDislike: boolean
-  trackNumberUpdateTime: number
-  playCount: number
-  trackCount: number
-  highQuality: boolean
-  alg: string
-}
-
-//下面这个是RKT的异步无监听函数，可以直接在这个异步函数当中进行异步操作
+import { BannerData, HotrecommedData, NewAlbum } from './type'
 export const fetchBannerData = createAsyncThunk(
   'banner', //下面这个dispatch直接从固有的RKTAPI拿取，不用传值得到
   async (arg, { dispatch }) => {
@@ -45,17 +22,28 @@ export const fetchHotRecommendData = createAsyncThunk(
     dispatch(changeHotrecommendAction(res.result))
   }
 )
+//获取新碟上架数据
+export const fetchNewAlbumData = createAsyncThunk(
+  'newalbum',
+  async (arg, { dispatch }) => {
+    //调用这个函数的时候将limit的值设定为8
+    const res = await getNewAlbum()
+    dispatch(changeNewalbumAction(res.albums))
+  }
+)
 interface Data {
   //接口的类型必须写成这种形式，即左边是变量名称，右侧是该变量的类型
   banners: BannerData[]
   hotrecommend: HotrecommedData[]
+  newalbum: NewAlbum[]
 }
 
 const initialState: Data = {
   //initialState设置为一个对象，banners是对象名称
   //[]是这个对象的初始值。这个数组当中的每个元素的类型就是BannerData
   banners: [],
-  hotrecommend: []
+  hotrecommend: [],
+  newalbum: []
 }
 const recommend_slice = createSlice({
   name: 'banner',
@@ -66,9 +54,15 @@ const recommend_slice = createSlice({
     },
     changeHotrecommendAction(state, { payload }) {
       state.hotrecommend = payload
+    },
+    changeNewalbumAction(state, { payload }) {
+      state.newalbum = payload
     }
   }
 })
-export const { changeBannerAction, changeHotrecommendAction } =
-  recommend_slice.actions
+export const {
+  changeBannerAction,
+  changeHotrecommendAction,
+  changeNewalbumAction
+} = recommend_slice.actions
 export default recommend_slice.reducer

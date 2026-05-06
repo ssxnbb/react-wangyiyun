@@ -3,7 +3,7 @@ import type { ReactNode, FC } from 'react'
 import TopBanner from './c-cpns/top-banner'
 import { RecommendWrap } from './style'
 import HotRecommend from './c-cpns/hot-recommend'
-
+import NewAlbum from './c-cpns/new-album'
 interface IProps {
   children?: ReactNode
 }
@@ -24,6 +24,7 @@ const Recommend: FC<IProps> = () => {
       <div className="content wrap-v2">
         <div className="left">
           <HotRecommend />
+          <NewAlbum />
         </div>
         <div className="right">right</div>
       </div>
