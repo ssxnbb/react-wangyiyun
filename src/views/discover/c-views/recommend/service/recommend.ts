@@ -20,3 +20,10 @@ export function getNewAlbum() {
     url: '/album/newest'
   })
 }
+//获取排行榜的后端数据
+export function getPaylist(id: number) {
+  return hyRequest.get({
+    url: '/playlist/detail',
+    params: {id}
+  })
+}

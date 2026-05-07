@@ -1,9 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getBanner, getHotRecommend, getNewAlbum } from '../service/recommend'
+import {
+  getBanner,
+  getHotRecommend,
+  getNewAlbum,
+  getPaylist
+} from '../service/recommend'
 import { log } from 'console'
 import { stat } from 'fs'
 import { BannerData, HotrecommedData, NewAlbum } from './type'
+import { resolve } from 'dns'
 export const fetchBannerData = createAsyncThunk(
   'banner', //下面这个dispatch直接从固有的RKTAPI拿取，不用传值得到
   async (arg, { dispatch }) => {
@@ -31,11 +37,31 @@ export const fetchNewAlbumData = createAsyncThunk(
     dispatch(changeNewalbumAction(res.albums))
   }
 )
+export const fetchTopRankingData = createAsyncThunk(
+  'topranking',
+  async (arg, { dispatch }) => {
+    //一共有三个榜单，对应三个id，为了避免榜单数据顺序错乱，我们需要
+    //按照顺序获取，通过promise的all函数确保所有数据获取后再去前端渲染
+    const ids = [19723756, 3779629, 2884035]
+    //设置promise数组，这个promise数组需要设定泛型，用这个来存储promise数组
+    const promises: Promise<any>[] = []
+    for (const id of ids) {
+      //getPaylist这个函数最终返回的是一个promise
+      promises.push(getPaylist(id))
+    }
+    //res是一个数组存储所有resolve的结果
+    Promise.all(promises).then((res) => {
+      const playlists = res.map((item, index) =>item.playlist)
+      dispatch(changeTopRankingAction(playlists))
+    })
+  }
+)
 interface Data {
   //接口的类型必须写成这种形式，即左边是变量名称，右侧是该变量的类型
   banners: BannerData[]
   hotrecommend: HotrecommedData[]
   newalbum: NewAlbum[]
+  topRanking: any[]
 }
 
 const initialState: Data = {
@@ -43,7 +69,8 @@ const initialState: Data = {
   //[]是这个对象的初始值。这个数组当中的每个元素的类型就是BannerData
   banners: [],
   hotrecommend: [],
-  newalbum: []
+  newalbum: [],
+  topRanking: []
 }
 const recommend_slice = createSlice({
   name: 'banner',
@@ -57,12 +84,16 @@ const recommend_slice = createSlice({
     },
     changeNewalbumAction(state, { payload }) {
       state.newalbum = payload
+    },
+    changeTopRankingAction(state, { payload }) {
+      state.topRanking = payload
     }
   }
 })
 export const {
   changeBannerAction,
   changeHotrecommendAction,
-  changeNewalbumAction
+  changeNewalbumAction,
+  changeTopRankingAction
 } = recommend_slice.actions
 export default recommend_slice.reducer
