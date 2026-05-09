@@ -24,6 +24,12 @@ export function getNewAlbum() {
 export function getPaylist(id: number) {
   return hyRequest.get({
     url: '/playlist/detail',
-    params: {id}
+    params: { id }
+  })
+}
+export function getartistlist(limit: number) {
+  return hyRequest.get({
+    url: '/artist/list',
+    params: { limit }
   })
 }

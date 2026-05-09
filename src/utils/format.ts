@@ -5,5 +5,5 @@ export const format_count = (count: any) => {
   return count
 }
 export const getImage = (imageUrl: any, width: any, height: any = width) => {
-  return imageUrl + `param?${width}*${height}`
+  return imageUrl + `param?${width}y${height}`
 }

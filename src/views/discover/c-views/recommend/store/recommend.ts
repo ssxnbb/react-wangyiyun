@@ -4,7 +4,8 @@ import {
   getBanner,
   getHotRecommend,
   getNewAlbum,
-  getPaylist
+  getPaylist,
+  getartistlist
 } from '../service/recommend'
 import { log } from 'console'
 import { stat } from 'fs'
@@ -51,9 +52,17 @@ export const fetchTopRankingData = createAsyncThunk(
     }
     //res是一个数组存储所有resolve的结果
     Promise.all(promises).then((res) => {
-      const playlists = res.map((item, index) =>item.playlist)
+      const playlists = res.map((item, index) => item.playlist)
       dispatch(changeTopRankingAction(playlists))
     })
+  }
+)
+export const fetchArtistData = createAsyncThunk(
+  'artist',
+  async (arg, { dispatch }) => {
+    //调用这个函数的时候将limit的值设定为8
+    const res = await getartistlist(5)
+    dispatch(changeArtistsAction(res.artists))
   }
 )
 interface Data {
@@ -62,6 +71,7 @@ interface Data {
   hotrecommend: HotrecommedData[]
   newalbum: NewAlbum[]
   topRanking: any[]
+  artists: any[]
 }
 
 const initialState: Data = {
@@ -70,7 +80,8 @@ const initialState: Data = {
   banners: [],
   hotrecommend: [],
   newalbum: [],
-  topRanking: []
+  topRanking: [],
+  artists: []
 }
 const recommend_slice = createSlice({
   name: 'banner',
@@ -87,6 +98,9 @@ const recommend_slice = createSlice({
     },
     changeTopRankingAction(state, { payload }) {
       state.topRanking = payload
+    },
+    changeArtistsAction(state, { payload }) {
+      state.artists = payload
     }
   }
 })
@@ -94,6 +108,7 @@ export const {
   changeBannerAction,
   changeHotrecommendAction,
   changeNewalbumAction,
-  changeTopRankingAction
+  changeTopRankingAction,
+  changeArtistsAction
 } = recommend_slice.actions
 export default recommend_slice.reducer
