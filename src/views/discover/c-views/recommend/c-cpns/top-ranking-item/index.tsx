@@ -3,12 +3,20 @@ import type { ReactNode, FC } from 'react'
 import { ToprankingItemWrapper } from './style'
 import topRanking from '../top-ranking'
 import { getImage } from '@/utils/format'
+import { useAppDispatch } from '@/store'
+import { fetchCurrentSongDataAction } from '@/views/player/store/player'
 interface IProps {
   children?: ReactNode
   topRanking?: any
 }
 //<IProps>默认将函数参数props设置为Iprops
 const ToprankingItem: FC<IProps> = (props) => {
+  const dispatch = useAppDispatch()
+
+  function handlePlayClick(id: number) {
+    dispatch(fetchCurrentSongDataAction(id))
+  }
+
   const { topRanking } = props
   const { tracks = [] } = topRanking
   return (
@@ -34,7 +42,10 @@ const ToprankingItem: FC<IProps> = (props) => {
               <div className="info">
                 <span className="name text-nowrap">{item.name}</span>
                 <div className="operate">
-                  <button className="btn sprite_02 play"></button>
+                  <button
+                    className="btn sprite_02 play"
+                    onClick={()=>handlePlayClick(item.id)}
+                  ></button>
                   <button className="btn sprite_icon2 addto"></button>
                   <button className="btn sprite_02 favor"></button>
                 </div>

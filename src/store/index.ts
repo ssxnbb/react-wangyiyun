@@ -3,12 +3,14 @@ import counterReducer from './modules/counter'
 import { TypedUseSelectorHook } from 'react-redux'
 import { useSelector, useDispatch } from 'react-redux'
 import recommendReducer from '../views/discover/c-views/recommend/store/recommend'
+import playerReducer from '../views/player/store/player'
 //createSlice相当于局部数据库，store相当于总体数据库，
 // 把局部数据库存入整体数据库
 const store = configureStore({
   reducer: {
     counter: counterReducer,
-    recommend: recommendReducer
+    recommend: recommendReducer,
+    player: playerReducer
   }
 })
 //const state = store.getState()
