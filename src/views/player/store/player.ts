@@ -1,19 +1,59 @@
 import { createSlice, Slice } from '@reduxjs/toolkit'
 import { Interface } from 'readline'
-import { getSongDetail } from '../service/player'
+import { getSongDetail, getSongLyric } from '../service/player'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { parseLyric } from '@/utils/parse-lyric'
+import { IRootState } from '@/store'
 //建立一个数据中转的store，每次播放从当中提取数据
+interface rootstate {
+  state: IRootState
+}
 interface currentsongtype {
   currentSong: any
+  currentlyric: any
+  currentSonglist: any[]
+  currentSongindex: number
+  playmode: number
 }
-export const fetchCurrentSongDataAction = createAsyncThunk(
-  'player/fetchCurrentSong',
-  async (id: number, { dispatch }) => {
+//第一个参数为异步函数返回值类型，第二个参数为传入参数id的类型，第三个参数为state的类型
+export const fetchCurrentSongDataAction = createAsyncThunk<
+  void,
+  number,
+  rootstate
+>('player/fetchCurrentSong', async (id: number, { dispatch, getState }) => {
+  //获取歌的逻辑变为，先看是否有歌在我的列表里，如果在则直接从列表里拿
+  //如果不在，则从服务器当中获取，并把这首歌加入到歌曲列表当中
+  const list = getState().player.currentSonglist
+  //如果是-1则没有查询到，如果有返回值则查询到
+  const index = list.findIndex((item) => item.id === id)
+  if (index !== -1) {
+    const song = list[index]
+    if (!song) return
+    //改写当前歌曲
+    dispatch(changeCurrentSongAction(song))
+    //改变当前歌曲索引
+    dispatch(changeCurrentSongindex(index))
+  } else {
     const res = await getSongDetail(id)
     const song = res.songs[0]
     if (!song) return
-
+    const nowSonglist = [...list]
+    nowSonglist.push(song)
+    //将新听的歌加入列表当中
+    dispatch(changeCurrentSonglist(nowSonglist))
     dispatch(changeCurrentSongAction(song))
+    dispatch(changeCurrentSongindex(nowSonglist.length - 1))
+  }
+})
+export const fetchCurrentLyric = createAsyncThunk(
+  'player/fetchCurrentLyric',
+  async (id: number, { dispatch }) => {
+    const res = await getSongLyric(id)
+    const lric = res.lrc.lyric
+    if (!lric) return
+    //对歌词进行格式化然后再放到store当中。
+    const lrics = parseLyric(lric)
+    dispatch(changeCurrentLric(lrics))
   }
 )
 //必须设置initialState
@@ -86,7 +126,11 @@ const initialState: currentsongtype = {
     mst: 9,
     cp: 684010,
     publishTime: 1049126400000
-  }
+  },
+  currentlyric: [],
+  currentSonglist: [],
+  currentSongindex: -1,
+  playmode: 0
 }
 
 const player_slice = createSlice({
@@ -95,8 +139,26 @@ const player_slice = createSlice({
   reducers: {
     changeCurrentSongAction(state, { payload }) {
       state.currentSong = payload
+    },
+    changeCurrentLric(state, { payload }) {
+      state.currentlyric = payload
+    },
+    changeCurrentSonglist(state, { payload }) {
+      state.currentSonglist = payload
+    },
+    changeCurrentSongindex(state, { payload }) {
+      state.currentSongindex = payload
+    },
+    changeCurrentPlayMode(state, { payload }) {
+      state.playmode = payload
     }
   }
 })
-export const { changeCurrentSongAction } = player_slice.actions
+export const {
+  changeCurrentSongAction,
+  changeCurrentLric,
+  changeCurrentSongindex,
+  changeCurrentSonglist,
+  changeCurrentPlayMode
+} = player_slice.actions
 export default player_slice.reducer

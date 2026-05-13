@@ -1,8 +1,6 @@
 import styled from 'styled-components'
 //设置内部属性类型
-interface IBarControlProps {
-  $isPlaying: boolean
-}
+
 export const PlayerBarWrapper = styled.div`
   position: fixed;
   z-index: 99;
@@ -24,6 +22,9 @@ export const PlayerBarWrapper = styled.div`
     height: 47px;
   }
 `
+interface IBarControlProps {
+  $isPlaying: boolean
+}
 export const BarControl = styled.div<IBarControlProps>`
   display: flex;
   align-items: center;
@@ -42,7 +43,8 @@ export const BarControl = styled.div<IBarControlProps>`
     width: 36px;
     height: 36px;
     margin: 0 8px;
-    background-position: 0 ${(props) => (props.$isPlaying ? '-165px' : '-204px')};
+    background-position: 0
+      ${(props) => (props.$isPlaying ? '-165px' : '-204px')};
     cursor: pointer;
   }
 
@@ -123,7 +125,10 @@ export const BarPlayinfo = styled.div`
     }
   }
 `
-export const BarOperator = styled.div`
+interface IBarOperatorProps {
+  $playmode: number
+}
+export const BarOperator = styled.div<IBarOperatorProps>`
   display: flex;
   align-items: center;
   position: relative;
@@ -161,17 +166,27 @@ export const BarOperator = styled.div`
     .volume {
       background-position: -2px -248px;
     }
-
+    //根据0，1，2进行图标的切换,1是随机播放，0是顺序播放，2是循环播放
     .loop {
-      background-position:-66px -248px
-    };
+      background-position: ${(props) => {
+        switch (props.$playmode) {
+          case 1:
+            return '-66px -248px'
+          case 2:
+            return '-66px -344px'
+          default:
+            return '-3px -344px'
+        }
+      }};
+      cursor: pointer;
     }
+  }
 
-    .playlist {
-      padding-left: 18px;
-      text-align: center;
-      color: #ccc;
-      width: 59px;
-      background-position: -42px -68px;
-    }
+  .playlist {
+    padding-left: 18px;
+    text-align: center;
+    color: #ccc;
+    width: 59px;
+    background-position: -42px -68px;
+  }
 `

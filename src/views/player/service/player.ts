@@ -8,3 +8,12 @@ export function getSongDetail(ids: number) {
     }
   })
 }
+//获取歌词对应的promise
+export function getSongLyric(id: number) {
+  return hyRequest.get({
+    url: '/lyric',
+    params: {
+      id
+    }
+  })
+}

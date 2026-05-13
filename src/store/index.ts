@@ -19,7 +19,7 @@ const store = configureStore({
 type GetStateFnType = typeof store.getState
 
 // 2. 利用 ReturnType 提取出 state 的具体结构类型
-type IRootState = ReturnType<GetStateFnType>
+export type IRootState = ReturnType<GetStateFnType>
 
 // 3. 获取 store 实例的 dispatch 方法的类型
 type DispatchType = typeof store.dispatch
