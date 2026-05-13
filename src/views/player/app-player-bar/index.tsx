@@ -99,12 +99,6 @@ const Playerbar: FC<IProps> = () => {
       }
       index = right
       if (index < 0 || index === lyindex) return
-      message.open({
-        content: currentlric[index].text,
-        key: 'lyric',
-        duration: 0
-      })
-      console.log(currentlric[index].text)
       setlyindex(index)
     }
   }
@@ -157,8 +151,54 @@ const Playerbar: FC<IProps> = () => {
       handleSongtoggle(true)
     }
   }
+  //下面实现展示歌曲列表功能
+  const [showPanel, setShowPanel] = useState(false)
+
+  function handlePlaylistToggle() {
+    //这个函数是点击最右侧按钮会导致面板的显示与隐藏
+    setShowPanel((prev) => !prev)
+  }
   return (
     <PlayerBarWrapper className="sprite_playbar">
+      {showPanel && (
+        <div className="playlist-panel">
+          <div className="panel-header">
+            <div className="left-title">播放列表</div>
+            <div className="right-title">{currentsong.name}</div>
+            <button className="close-btn" onClick={handlePlaylistToggle}>
+              ×
+            </button>
+          </div>
+
+          <div className="panel-body">
+            <div className="song-list">
+              {currentSonglist.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`play-item ${index === currentindex ? 'active' : ''}`}
+                  onClick={() => dispatch(fetchCurrentSongDataAction(item.id))}
+                >
+                  <span className="name">{item.name}</span>
+                  <span className="artist">{item.ar?.[0]?.name}</span>
+                  <span className="time">{formatPlayerTime(item.dt)}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="lyric-list">
+              {currentlric.map((item: any, index: number) => (
+                <div
+                  key={index}
+                  className={`lyric-item ${index === lyindex ? 'active' : ''}`}
+                >
+                  {item.text}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="content wrap-v2">
         <BarControl $isPlaying={isPlaying}>
           <button
@@ -214,17 +254,14 @@ const Playerbar: FC<IProps> = () => {
             <button className="btn sprite_playbar share"></button>
           </div>
           <div className="right sprite_playbar">
-            <button
-              className="btn sprite_playbar volume"
-              onClick={handleLoopChange}
-            ></button>
+            <button className="btn sprite_playbar volume"></button>
             <button
               className="btn sprite_playbar loop"
               onClick={handleLoopChange}
             ></button>
             <button
               className="btn sprite_playbar playlist"
-              onClick={handleLoopChange}
+              onClick={handlePlaylistToggle}
             ></button>
           </div>
         </BarOperator>
